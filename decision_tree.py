@@ -64,9 +64,7 @@ class DecisionTree(object):
         print("hello")
 
     def _get_label(self, table):
-        values = table.iloc[:,-1].value_counts(sort=True)
-        val = values[values==values.iloc[0]].keys()
-        return str(val)
+        return table.iloc[:,-1].value_counts(sort=True).index[0]
 
     def _get_sub_table(self, data, atr):
         groups = data[atr].unique()
