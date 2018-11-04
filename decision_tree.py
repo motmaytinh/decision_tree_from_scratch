@@ -83,8 +83,9 @@ class DecisionTree(object):
                     g.edge(parent,child.split_attribute, condition[i])
                     q.append(child)
                 
-        g.render("decision_tree", format="png")
-
+        # g.render("decision_tree", format="png")
+        return g
+        
     def _get_label(self, table):
         return table.iloc[:,-1].value_counts(sort=True).index[0]
 
