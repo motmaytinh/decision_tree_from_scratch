@@ -11,5 +11,7 @@ class RandomForest(object):
             self.forest.append(DecisionTree().fit(data, target))
 
     def predict(self, data):
-        for 
+        votes = []
+        for tree in self.forest:
+            votes.append(tree.predict)
 

@@ -2,13 +2,12 @@ import numpy as np
 import pandas as pd
 from collections import deque
 from graphviz import *
-# eps = np.finfo(float).eps
 
 class Node(object):
 
     def __init__(self, split_attribute = None, label = None):
-        self.split_attribute = split_attribute # which attribute is chosen, if non-leaf
-        self.label = label       # label of node if it is a leaf
+        self.split_attribute = split_attribute
+        self.label = label
         self.children = []
         self.condition = []
     
@@ -43,6 +42,10 @@ class DecisionTree(object):
                     node.children.append(child)
                     continue
                 elif rem == 0:
+                    if len(subtable.iloc[:,-1].unique()) == 1:
+                        tmp = Node(label=subtable.iloc[:,-1].unique()[0])
+                        node.add_child(tmp)
+                        continue
                     child = Node(atr)
                     child.set_condition(condition)
                     node.add_child(child)
@@ -56,7 +59,6 @@ class DecisionTree(object):
                 child.set_condition(condition)
                 node.add_child(child)
                 q.append((child, sub))
-        print("Done")
 
     def predict(self, row):
         node = self.root
@@ -131,13 +133,13 @@ class DecisionTree(object):
 def main():
     a = DecisionTree()
     load = pd.read_csv("data2.csv")
-    tmp = load.drop('Example',axis=1)
-    # print(tmp)
-    data = tmp.iloc[:,:-1]
+    data = load.drop('Example',axis=1)
+    data = data.iloc[:,:-1]
     target = load.iloc[:,-1]
     a.fit(data,target)
     a.draw_tree()
-    print(a.predict(data.iloc[1,:]))
+    for i in range(12):
+        print(a.predict(data.iloc[i,:]))
 
 if __name__ == "__main__":
     main()
