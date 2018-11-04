@@ -7,10 +7,8 @@ from graphviz import *
 class Node(object):
 
     def __init__(self, split_attribute = None, label = None):
-        # self.entropy = entropy   # entropy, will fill later
         self.split_attribute = split_attribute # which attribute is chosen, if non-leaf
         self.label = label       # label of node if it is a leaf
-        # self.condition = condition
         self.children = []
         self.condition = []
     
@@ -22,11 +20,7 @@ class Node(object):
 
 class DecisionTree(object):
     def fit(self, data, target):
-        # self.Ntrain = data.count()[0]
         self.data = pd.concat([data,target],axis=1)
-        # self.attributes = list(data)
-        # self.target = target 
-        # self.labels = target.unique()
         rem, atr, condition = self._get_split_atr(self.data)
 
         self.root = Node(split_attribute=atr)
@@ -64,6 +58,13 @@ class DecisionTree(object):
                 q.append((child, sub))
         print("Done")
 
+    def predict(self, row):
+        node = self.root
+        while node.label is None:
+            index = node.condition.index(row[node.split_attribute])
+            node = node.children[index]
+        return node.label
+
     def draw_tree(self):
         g = Digraph('G', filename='decision_tree.gv')
 
@@ -74,8 +75,6 @@ class DecisionTree(object):
             tmp = q.pop()
             condition = tmp.condition
             parent = tmp.split_attribute
-            # if not tmp.children:
-            #     g.edge(parent,child.split_attribute)
             for i, child in enumerate(tmp.children):
                 if not child.children:
                     g.edge(parent,child.label, condition[i])
@@ -131,11 +130,14 @@ class DecisionTree(object):
 
 def main():
     a = DecisionTree()
-    load = pd.read_csv("data.csv")
-    data = load.iloc[:,:-1]
+    load = pd.read_csv("data2.csv")
+    tmp = load.drop('Example',axis=1)
+    # print(tmp)
+    data = tmp.iloc[:,:-1]
     target = load.iloc[:,-1]
     a.fit(data,target)
     a.draw_tree()
+    print(a.predict(data.iloc[1,:]))
 
 if __name__ == "__main__":
     main()
