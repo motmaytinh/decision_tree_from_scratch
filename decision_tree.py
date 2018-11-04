@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from collections import deque
+from graphviz import *
 # eps = np.finfo(float).eps
 
 class Node(object):
@@ -61,7 +62,28 @@ class DecisionTree(object):
                 child.set_condition(condition)
                 node.add_child(child)
                 q.append((child, sub))
-        print("hello")
+        print("Done")
+
+    def draw_tree(self):
+        g = Digraph('G', filename='decision_tree.gv', strict=True)
+
+        q = deque()
+        q.append(self.root)
+
+        while q:
+            tmp = q.pop()
+            condition = tmp.condition
+            parent = tmp.split_attribute
+            # if not tmp.children:
+            #     g.edge(parent,child.split_attribute)
+            for i, child in enumerate(tmp.children):
+                if not child.children:
+                    g.edge(parent,child.label, condition[i])
+                else:
+                    g.edge(parent,child.split_attribute, condition[i])
+                    q.append(child)
+                
+        g.render("decision_tree", format="png")
 
     def _get_label(self, table):
         return table.iloc[:,-1].value_counts(sort=True).index[0]
@@ -111,8 +133,8 @@ def main():
     load = pd.read_csv("data.csv")
     data = load.iloc[:,:-1]
     target = load.iloc[:,-1]
-    print(a.fit(data,target))
-    # print(a._get_split_atr(data,target))
+    a.fit(data,target)
+    a.draw_tree()
 
 if __name__ == "__main__":
     main()

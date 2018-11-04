@@ -155,3 +155,5 @@ config.rst
 /.pydevproject
 
 package-lock.json
+
+.vscode/
