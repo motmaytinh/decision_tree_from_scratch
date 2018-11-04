@@ -65,7 +65,7 @@ class DecisionTree(object):
         print("Done")
 
     def draw_tree(self):
-        g = Digraph('G', filename='decision_tree.gv', strict=True)
+        g = Digraph('G', filename='decision_tree.gv')
 
         q = deque()
         q.append(self.root)
@@ -85,7 +85,7 @@ class DecisionTree(object):
                 
         # g.render("decision_tree", format="png")
         return g
-        
+
     def _get_label(self, table):
         return table.iloc[:,-1].value_counts(sort=True).index[0]
 
