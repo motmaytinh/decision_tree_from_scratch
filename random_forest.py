@@ -10,26 +10,28 @@ class RandomForest(object):
         high = data.shape[0]
         for i in range(num_tree):
             idx = np.random.randint(0,high,high//2)
-            self.forest.append(DecisionTree().fit(data.iloc[idx], target.iloc[idx]))
+            tree = DecisionTree()
+            tree.fit(data.iloc[idx], target.iloc[idx])
+            self.forest.append(tree)
 
     def predict(self, data):
         votes = []
         
         for tree in self.forest:
-            votes.append(tree.predict)
+            votes.append(tree.predict(data))
 
-        return _most_common(lst)
+        return self._most_common(votes)
 
         
-    def _most_common(lst):
+    def _most_common(self, lst):
         return max(set(lst), key=lst.count)
 
 def main():
-    clf = DecisionTree()
+    clf = RandomForest()
     load = pd.read_csv("mushrooms.csv")
     data = load.iloc[:,1:]
     target = load.iloc[:,0]
-    clf.fit(data,target)
+    clf.fit(data,target,5)
     for i in range(12):
         print(clf.predict(data.iloc[i,:]))
 
