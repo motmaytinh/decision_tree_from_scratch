@@ -26,9 +26,9 @@ class RandomForest(object):
 
 def main():
     clf = DecisionTree()
-    load = pd.read_csv("data.csv")
-    data = load.iloc[:,:-1]
-    target = load.iloc[:,-1]
+    load = pd.read_csv("mushrooms.csv")
+    data = load.iloc[:,1:]
+    target = load.iloc[:,0]
     clf.fit(data,target)
     for i in range(12):
         print(clf.predict(data.iloc[i,:]))
