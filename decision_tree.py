@@ -32,11 +32,8 @@ class DecisionTree(object):
         while q:
             node, subtables = q.popleft()
             for subtable in subtables:
-                # print(subtable)
                 rem, atr, condition = self._get_split_atr(subtable)
-                # print(atr)
                 if subtable.shape[1] == 2:
-                    # print(subtable)
                     # print(subtable.shape)
                     child = Node(label=self._get_label(subtable))
                     node.children.append(child)
@@ -84,8 +81,8 @@ class DecisionTree(object):
                     g.edge(parent,child.split_attribute, condition[i])
                     q.append(child)
                 
-        # g.render("decision_tree", format="png")
-        return g
+        g.render("decision_tree", format="png")
+        #return g
 
     def _get_label(self, table):
         return table.iloc[:,-1].value_counts(sort=True).index[0]
@@ -132,10 +129,9 @@ class DecisionTree(object):
 
 def main():
     a = DecisionTree()
-    load = pd.read_csv("data2.csv")
-    data = load.drop('Example',axis=1)
-    data = data.iloc[:,:-1]
-    target = load.iloc[:,-1]
+    load = pd.read_csv("mushrooms.csv")
+    data = load.iloc[:,1:]
+    target = load.iloc[:,0]
     a.fit(data,target)
     a.draw_tree()
     for i in range(12):

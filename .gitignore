@@ -157,3 +157,5 @@ config.rst
 package-lock.json
 
 .vscode/
+*.png
+decision_tree
