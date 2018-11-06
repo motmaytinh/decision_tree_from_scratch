@@ -10,7 +10,7 @@ class RandomForest(object):
 
     def fit(self, data, target):
         high = data.shape[0]
-        n_col = data.count(1)[0]
+        n_col = data.count(1).iloc[0]
         for i in range(self.num_tree):
             idx = np.random.choice(high, size=high//2, replace=False, p=None)
             idx.sort()
