@@ -76,9 +76,9 @@ class DecisionTree(object):
             parent = tmp.split_attribute
             for i, child in enumerate(tmp.children):
                 if not child.children:
-                    g.edge(parent,child.label, condition[i])
+                    g.edge(parent,child.label, str(condition[i]))
                 else:
-                    g.edge(parent,child.split_attribute, condition[i])
+                    g.edge(parent,child.split_attribute, str(condition[i]))
                     q.append(child)
                 
         g.render("decision_tree", format="png")
@@ -129,9 +129,9 @@ class DecisionTree(object):
 
 def main():
     a = DecisionTree()
-    load = pd.read_csv("mushrooms.csv")
-    data = load.iloc[:,1:]
-    target = load.iloc[:,0]
+    load = pd.read_csv("adult.csv")
+    data = load.iloc[0:50,:-1]
+    target = load.iloc[0:50,-1]
     a.fit(data,target)
     a.draw_tree()
     for i in range(12):
