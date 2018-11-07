@@ -18,6 +18,12 @@ class Node(object):
         self.condition = condition
 
 class DecisionTree(object):
+    def __init__(self):
+        self.styles = {
+            'label': {'shape': 'circle'},
+            'node': {'shape': 'rect'}
+        }
+
     def fit(self, data, target):
         self.data = pd.concat([data,target],axis=1)
         rem, atr, condition = self._get_split_atr(self.data)
@@ -67,19 +73,26 @@ class DecisionTree(object):
     def draw_tree(self):
         g = Digraph('G', filename='decision_tree.gv')
 
+        count = 0
+
         q = deque()
-        q.append(self.root)
+        q.append((self.root, 0))
+        g.node(str(0), self.root.split_attribute, self.styles['node'])
 
         while q:
-            tmp = q.pop()
+            tmp, idx = q.pop()
             condition = tmp.condition
             parent = tmp.split_attribute
             for i, child in enumerate(tmp.children):
                 if not child.children:
-                    g.edge(parent,child.label, str(condition[i]))
+                    count+=1
+                    g.node(str(count), str(child.label), self.styles['label'])
+                    g.edge(str(idx) , str(count), str(condition[i]))
                 else:
-                    g.edge(parent,child.split_attribute, str(condition[i]))
-                    q.append(child)
+                    count+=1
+                    g.node(str(count), str(child.split_attribute), self.styles['node'])
+                    g.edge(str(idx) , str(count), str(condition[i]))
+                    q.append((child, count))
                 
         g.render("decision_tree", format="png")
         #return g
@@ -129,9 +142,9 @@ class DecisionTree(object):
 
 def main():
     a = DecisionTree()
-    load = pd.read_csv("adult.csv")
-    data = load.iloc[0:50,:-1]
-    target = load.iloc[0:50,-1]
+    load = pd.read_csv("mushrooms.csv")
+    data = load.iloc[:,1:]
+    target = load.iloc[:,0]
     a.fit(data,target)
     a.draw_tree()
     for i in range(12):
