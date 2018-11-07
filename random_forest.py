@@ -23,7 +23,6 @@ class RandomForest(object):
             else:
                 tree.fit(data.iloc[idx], target.iloc[idx])
 
-            tree.fit(data.iloc[idx], target.iloc[idx])
             self.forest.append(tree)
 
     def predict(self, data):
