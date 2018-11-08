@@ -13,12 +13,10 @@ class RandomForest(object):
         n_col = data.count(1).iloc[0]
         for i in range(self.num_tree):
             idx = np.random.choice(high, size=high//2, replace=False, p=None)
-            idx.sort()
             tree = DecisionTree()
 
             if self.random_attribute:
                 col_idx = np.random.choice(n_col, size=2*n_col//3, replace=False, p=None)
-                col_idx.sort()
                 tree.fit(data.iloc[idx,col_idx], target.iloc[idx])
             else:
                 tree.fit(data.iloc[idx], target.iloc[idx])
